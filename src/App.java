@@ -59,7 +59,7 @@ public class App {
                                     startYear, gpa);
 
                             // Validate
-                            Validator.validateStudent(updated, manager);
+                            Validator.validateStudentForUpdate(id, updated, manager);
 
                             // If all fields are valid then add the student
                             manager.updateStudent(id, updated);

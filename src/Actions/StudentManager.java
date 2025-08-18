@@ -89,8 +89,6 @@ public class StudentManager {
         }
 
         try {
-            // Validate new data
-            Validator.validateStudent(updated, this);
             // Keep old student id
             updated.setId(existing.getId());
             // Replace in the list
@@ -199,7 +197,7 @@ public class StudentManager {
 
         map.entrySet().forEach(e -> {
             double percent = (e.getValue() * 100.0 / total);
-            System.out.printf("Điểm %.1f: %.2f%%\n", e.getKey(), percent);
+            System.out.printf("Score %.1f: %.2f%%\n", e.getKey(), percent);
         });
 
     }
