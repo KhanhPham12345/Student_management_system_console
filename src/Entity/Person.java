@@ -82,6 +82,7 @@ public class Person implements Serializable {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", dob=" + (dob != null ? dob.toString() : "null") +
+                ", address=" + address +
                 ", heightcm=" + heightcm +
                 ", weightkg=" + weightkg +
                 '}';

@@ -95,6 +95,7 @@ public class StudentManager {
             for (int i = 0; i < students.size(); i++) {
                 if (students.get(i).getId() == existing.getId()) {
                     students.set(i, updated);
+                    saveToFile();
                     break;
                 }
             }
@@ -124,7 +125,6 @@ public class StudentManager {
             System.out.println("Can't find student with that id or student code");
             return;
         }
-        students.remove(s);
 
         if (s != null) {
             students.remove(s);
