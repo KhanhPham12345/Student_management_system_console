@@ -1,12 +1,8 @@
 package Actions;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.ObjectInputStream;
@@ -15,7 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import Entity.HocLuc;
+import Entity.LearningStrength;
 import Entity.Student;
 
 public class StudentManager {
@@ -166,9 +162,9 @@ public class StudentManager {
 
     // Percentage of student learning strength from descending order
     public void getLearningStats() {
-        Map<HocLuc, Integer> map = new HashMap<>();
+        Map<LearningStrength, Integer> map = new HashMap<>();
         for (Student s : students) {
-            map.put(s.getHocLuc(), map.getOrDefault(s.getHocLuc(), 0) + 1);
+            map.put(s.getLearningstrength(), map.getOrDefault(s.getLearningstrength(), 0) + 1);
         }
         int total = students.size();
         if (total == 0) {

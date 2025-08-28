@@ -8,7 +8,7 @@ public class Student extends Person {
     private String school;
     private int startYear;
     private double gpa;
-    private HocLuc hocLuc;
+    private LearningStrength Learningstrength;
 
     public Student(String name, LocalDate dob, String address, float heightcm, float weightkg, String studentCode,
             String school, int startYear, double gpa) {
@@ -17,7 +17,7 @@ public class Student extends Person {
         this.school = school;
         this.startYear = startYear;
         this.gpa = gpa;
-        this.hocLuc = tinhHocLuc(gpa);
+        this.Learningstrength = tinhLearningstrength(gpa);
     }
 
     public String getStudentCode() {
@@ -50,25 +50,25 @@ public class Student extends Person {
 
     public void setGpa(double gpa) {
         this.gpa = gpa;
-        this.hocLuc = tinhHocLuc(gpa);
+        this.Learningstrength = tinhLearningstrength(gpa);
     }
 
-    public HocLuc getHocLuc() {
-        return hocLuc;
+    public LearningStrength getLearningstrength() {
+        return Learningstrength;
     }
 
-    private HocLuc tinhHocLuc(double gpa) {
+    private LearningStrength tinhLearningstrength(double gpa) {
         if (gpa < 3)
-            return HocLuc.KEM;
+            return LearningStrength.KEM;
         if (gpa < 5)
-            return HocLuc.YEU;
+            return LearningStrength.YEU;
         if (gpa < 6.5)
-            return HocLuc.TRUNG_BINH;
+            return LearningStrength.TRUNG_BINH;
         if (gpa < 7.5)
-            return HocLuc.KHA;
+            return LearningStrength.KHA;
         if (gpa < 9)
-            return HocLuc.GIOI;
-        return HocLuc.XUAT_SAC;
+            return LearningStrength.GIOI;
+        return LearningStrength.XUAT_SAC;
     }
 
     @Override
@@ -79,7 +79,7 @@ public class Student extends Person {
                 ", studentCode='" + studentCode + '\'' +
                 ", startYear=" + startYear +
                 ", gpa=" + gpa +
-                ", hocLuc=" + hocLuc +
+                ", Learningstrength=" + Learningstrength +
                 '}';
     }
 

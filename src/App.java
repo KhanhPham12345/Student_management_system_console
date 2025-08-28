@@ -10,7 +10,7 @@ public class App {
         StudentManager manager = new StudentManager("src\\IOFile\\save_students.txt");
         try (Scanner sc = new Scanner(System.in)) { // auto-close at end
             while (true) {
-                System.out.println("STUDENT MANAGEMENT APPLICATION MENU");
+                System.out.println("STUDENT MANAGEMENT DYNAMIC APPLICATION MENU");
                 System.out.println("Update students(Press 1):");
                 System.out.println("See all students(Press 2):");
                 System.out.println("Search student(input id)(Press 4):");

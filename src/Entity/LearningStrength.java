@@ -1,5 +1,5 @@
 package Entity;
 
-public enum HocLuc {
+public enum LearningStrength {
     KEM, YEU, TRUNG_BINH, KHA, GIOI, XUAT_SAC;
 }
