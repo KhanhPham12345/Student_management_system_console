@@ -2,6 +2,7 @@ package Entity;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Collection;
 
 public class Person implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -80,5 +81,16 @@ public class Person implements Serializable {
                 ", heightcm=" + heightcm +
                 ", weightkg=" + weightkg +
                 '}';
+    }
+
+    public static void reseedCounterFrom(Collection<? extends Person> people) {
+        int max = 0;
+
+        for (Person p : people) {
+            if (p.getId() > max)
+                max = p.getId();
+        }
+
+        counter = Math.max(counter, max + 1);
     }
 }

@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 import Entity.LearningStrength;
+import Entity.Person;
 import Entity.Student;
 
 public class DynamicStudentManager {
@@ -26,6 +27,12 @@ public class DynamicStudentManager {
 
     // CREATE - add student to the list
     public void addStudent(Student student) {
+        for (Student s : students) {
+            if (s.getId() == student.getId() || s.getStudentCode().equals(student.getStudentCode())) {
+                System.out.println("Can't save new student with duplicate id or student code");
+                return;
+            }
+        }
         students.add(student);
         saveToFile();
         System.out.println("Student added successfully");
@@ -127,6 +134,7 @@ public class DynamicStudentManager {
 
         if (!file.exists() || file.length() == 0) {
             students.clear();
+            Person.reseedCounterFrom(students);
             return;
         }
 
@@ -134,6 +142,7 @@ public class DynamicStudentManager {
             Object obj = ois.readObject();
             if (obj instanceof List<?>) {
                 students = new LinkedList<>((List<Student>) obj);
+                Person.reseedCounterFrom(students);
             }
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
