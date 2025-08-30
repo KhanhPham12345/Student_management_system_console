@@ -6,7 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.ObjectInputStream;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,28 +14,18 @@ import java.util.Map;
 import Entity.LearningStrength;
 import Entity.Student;
 
-public class StudentManager {
+public class DynamicStudentManager {
     private String filePath;
 
-    private List<Student> students = new ArrayList<>();
+    private List<Student> students = new LinkedList<>();
 
-    public StudentManager(String filePath) {
+    public DynamicStudentManager(String filePath) {
         this.filePath = filePath;
         loadFromFile();
     }
 
     // CREATE - add student to the list
     public void addStudent(Student student) {
-        for (Student s : students) {
-            if (s.getId() == student.getId() || s.getStudentCode().equals(student.getStudentCode())) {
-                System.out.println("Can't save new student with duplicate id or student code");
-                return;
-            }
-        }
-        if (student.getGpa() < 0 || student.getGpa() > 10) {
-            System.out.println("GPA must be between 0 and 10");
-            return;
-        }
         students.add(student);
         saveToFile();
         System.out.println("Student added successfully");
@@ -87,10 +77,10 @@ public class StudentManager {
         try {
             // Keep old student id
             updated.setId(existing.getId());
-            // Replace in the list
-            for (int i = 0; i < students.size(); i++) {
-                if (students.get(i).getId() == existing.getId()) {
-                    students.set(i, updated);
+            for (Student s : students) {
+                if (s.getId() == existing.getId()) {
+                    students.remove(s);
+                    students.add(updated);
                     saveToFile();
                     break;
                 }
@@ -143,11 +133,11 @@ public class StudentManager {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
             Object obj = ois.readObject();
             if (obj instanceof List<?>) {
-                students = (List<Student>) obj; // unchecked but safe because we only ever save List<Student>
+                students = new LinkedList<>((List<Student>) obj);
             }
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
-            students = new ArrayList<>();
+            students = new LinkedList<>();
         }
     }
 
@@ -198,11 +188,18 @@ public class StudentManager {
 
     }
 
-    public int convertStringToInt(String id) {
-        try {
-            return Integer.parseInt(id);
-        } catch (NumberFormatException e) {
-            return -1;
+    // Get all students by LearningStrength
+    public void getStudentsByLearningStrength(LearningStrength tier) {
+        boolean found = false;
+        for (Student student : students) {
+            if (student.getLearningstrength() == tier) {
+                System.out.println(student.toString());
+                found = true;
+            }
+        }
+
+        if (!found) {
+            System.out.println("Warn: there is no Student belong to tier: " + tier.getPerformance());
         }
     }
 

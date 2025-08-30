@@ -1,109 +1,294 @@
 package Actions;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Scanner;
 
+import Entity.LearningStrength;
 import Entity.Student;
 
 public class Validator {
-    public static void validateStudent(Student s, StudentManager manager) {
-        // Name
-        if (s.getName() == null || s.getName().trim().isEmpty() || s.getName().length() > 100) {
-            throw new IllegalArgumentException("Invalid name (not empty, < 100 characters)");
-        }
-        // DOB
-        if (s.getDob() == null || s.getDob().isBefore(LocalDate.of(1900, 1, 1))) {
-            throw new IllegalArgumentException("Invalid date of birth (>= 1900)");
-        }
-        // Address
-        if (s.getAddress() != null && s.getAddress().length() > 300) {
-            throw new IllegalArgumentException("Address too long(>300 characters)");
-        }
-        // Height
-        if (s.getHeightcm() < 50.0 || s.getHeightcm() > 300) {
-            throw new IllegalArgumentException("Height must be within range 50-300 cm");
-        }
-        // Weight
-        if (s.getWeightkg() < 5.0 || s.getWeightkg() > 1000.0) {
-            throw new IllegalArgumentException("Weight must be within range 5-1000kg");
-        }
-        // Student code
-        if (s.getStudentCode() == null || s.getStudentCode().length() != 10) {
-            throw new IllegalArgumentException("Student code must have 10 characters");
-        }
-        if (manager.findByStudentCode(s.getStudentCode()) != null) {
-            throw new IllegalArgumentException("Existing student code.");
-        }
 
-        // School
-        if (s.getSchool() == null || s.getSchool().trim().isEmpty() || s.getSchool().length() >= 200) {
-            throw new IllegalArgumentException("Invalid school name (not empty & fewer than 200 characters)");
-        }
+    public static final int MAX_NAME_LENGTH = 100;
+    public static final int MIN_YEAR = 1900;
+    public static final int MAX_YEAR = 2025;
+    public static final int MAX_ADDRESS_LENGTH = 300;
+    public static final int MIN_HEIGHT = 50;
+    public static final int MAX_HEIGHT = 300;
+    public static final int MIN_WEIGHT = 5;
+    public static final int MAX_WEIGHT = 1000;
 
-        // Start year
-        if (s.getStartYear() < 1900 || String.valueOf(s.getStartYear()).length() != 4) {
-            throw new IllegalArgumentException("Invalid start year(>= 1900, 4 numbers)");
-        }
-        // GPA
-        if (s.getGpa() < 0.0 || s.getGpa() > 10.0) {
-            throw new IllegalArgumentException("GPA must be within range 0-10.0");
-        }
+    public static final int STUDENT_CODE = 10;
+    public static final int MAX_SCHOOL_NAME_LENGTH = 200;
+    public static final double MIN_GPA = 0;
+    public static final double MAX_GPA = 10;
+    public static final int MAX_STUDENT = 100;
 
+    public static boolean validateName(String name) {
+        if (name == null || name.isBlank() || name.length() > MAX_NAME_LENGTH) {
+            return false;
+        }
+        return !name.matches(".*\\d.*");
     }
 
-    // New method for UPDATING an existing student
-    public static void validateStudentForUpdate(String existingId, Student updatedStudent, StudentManager manager) {
-        // Name
-        if (updatedStudent.getName() == null || updatedStudent.getName().trim().isEmpty()
-                || updatedStudent.getName().length() > 100) {
-            throw new IllegalArgumentException("Invalid name (not empty, < 100 characters)");
+    public static boolean validateId(String id, DynamicStudentManager manager) {
+        return id != null && id.matches("\\d+") && manager.findById(id) != null;
+    }
+
+    public static boolean validateBirth(String dateOfbirth) {
+        if (dateOfbirth == null || dateOfbirth.trim().isEmpty()) {
+            return false;
         }
-        // DOB
-        if (updatedStudent.getDob() == null || updatedStudent.getDob().isBefore(LocalDate.of(1900, 1, 1))) {
-            throw new IllegalArgumentException("Invalid date of birth (>= 1900)");
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            LocalDate date = LocalDate.parse(dateOfbirth, formatter);
+            int year = date.getYear();
+            // Check the year if it fits condition
+            if (year < MIN_YEAR || year > MAX_YEAR) {
+                System.out.print("Invalid date of birth");
+                return false;
+            }
+        } catch (Exception e) {
+            System.out.println("Invalid date of birth. Please input correct format dd/MM/yyyy");
+            return false;
         }
-        // Address
-        if (updatedStudent.getAddress() != null && updatedStudent.getAddress().length() > 300) {
-            throw new IllegalArgumentException("Address too long(>300 characters)");
-        }
-        // Height
-        if (updatedStudent.getHeightcm() < 50.0 || updatedStudent.getHeightcm() > 300) {
-            throw new IllegalArgumentException("Height must be within range 50-300 cm");
-        }
-        // Weight
-        if (updatedStudent.getWeightkg() < 5.0 || updatedStudent.getWeightkg() > 1000.0) {
-            throw new IllegalArgumentException("Weight must be within range 5-1000kg");
-        }
-        // Student code
-        if (updatedStudent.getStudentCode() == null || updatedStudent.getStudentCode().length() != 10) {
-            throw new IllegalArgumentException("Student code must have 10 characters");
+        return true;
+    }
+
+    public static boolean validateAddress(String address) {
+        return address != null && !address.trim().isEmpty() && address.length() <= MAX_ADDRESS_LENGTH;
+    }
+
+    public static boolean validateHeight(Float height) {
+        return height != null && height >= MIN_HEIGHT && height <= MAX_HEIGHT;
+    }
+
+    public static boolean validatWeight(Float weight) {
+        return weight != null && weight >= MIN_HEIGHT && weight <= MAX_HEIGHT;
+    }
+
+    public static boolean validateStudentCode(String studentCode) {
+        return studentCode != null && !studentCode.trim().isBlank() && studentCode.length() == STUDENT_CODE;
+    }
+
+    public static boolean validateSchool(String school) {
+        return school != null && !school.trim().isBlank() && school.length() <= MAX_SCHOOL_NAME_LENGTH;
+    }
+
+    public static boolean validateStartYear(Integer startYear) {
+        return startYear != null && startYear >= MIN_YEAR && startYear <= MAX_YEAR;
+    }
+
+    public static boolean validateGpa(Double gpa) {
+        return gpa != null && gpa >= MIN_GPA && gpa <= MAX_GPA;
+    }
+
+    public static boolean validate(String input, String type) {
+        if (input == null || input.trim().isEmpty()) {
+            return false;
         }
 
-        // Find the student with the new student code.
-        Student existingStudent = manager.findByStudentCode(updatedStudent.getStudentCode());
+        try {
+            switch (type.toLowerCase()) {
+                case "name":
+                    return validateName(input);
 
-        // If a student is found AND their ID is *not* the ID we are updating, then it's
-        // a conflict.
-        if (existingStudent != null) {
-            int comparingId = manager.convertStringToInt(existingId);
+                case "dateofbirth":
+                    return validateBirth(input);
 
-            if (existingStudent.getId() != comparingId) {
-                throw new IllegalArgumentException("Existing student code.");
+                case "address":
+                    return validateAddress(input);
+
+                case "height":
+                    float height = Float.parseFloat(input);
+                    return validateHeight(height);
+
+                case "weight":
+                    float weight = Float.parseFloat(input);
+                    return validatWeight(weight);
+
+                case "studentcode":
+                    return validateStudentCode(input);
+
+                case "school":
+                    return validateSchool(input);
+
+                case "startyear":
+                    int year = Integer.parseInt(input);
+                    return validateStartYear(year);
+                case "gpa":
+                    double gpa = Double.parseDouble(input);
+                    return validateGpa(gpa);
+
+                default:
+                    System.out.println("Unknown validation type: " + type);
+                    return false;
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid number format for type: " + type);
+            return false;
+        }
+    }
+
+    public static boolean updateStudent(Student updateStudent, String field, String newValue) {
+        if (updateStudent == null || field == null || newValue == null) {
+            System.out.println("Invalid parameter");
+            return false;
+        }
+
+        String lowerField = field.toLowerCase();
+
+        if (!Validator.validate(newValue, lowerField)) {
+            System.out.println("New value is invalid for field: " + field);
+            return false;
+        }
+
+        try {
+            switch (lowerField) {
+                case "name":
+                    updateStudent.setName(newValue);
+                    break;
+                case "dateofbirth":
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                    LocalDate dob = LocalDate.parse(newValue, formatter);
+                    updateStudent.setDob(dob);
+                    break;
+
+                case "address":
+                    updateStudent.setAddress(newValue);
+                    break;
+
+                case "height":
+                    updateStudent.setHeightcm(Float.parseFloat(newValue));
+                    break;
+
+                case "weight":
+                    updateStudent.setWeightkg(Float.parseFloat(newValue));
+                    break;
+
+                case "studentcode":
+                    updateStudent.setStudentCode(newValue);
+                    break;
+
+                case "school":
+                    updateStudent.setSchool(newValue);
+                    break;
+
+                case "startyear":
+                    updateStudent.setStartYear(Integer.parseInt(newValue));
+                    break;
+
+                case "gpa":
+                    updateStudent.setGpa(Double.parseDouble(newValue));
+                    break;
+                default:
+                    System.out.println("Non-existing field: " + field);
+                    break;
+            }
+            return true;
+        } catch (Exception e) {
+            System.out.println("Error updating field: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public static LearningStrength parseLearningStrength(String item) {
+        for (LearningStrength i : LearningStrength.values()) {
+            if (i.getPerformance().equalsIgnoreCase(item)) {
+                return i;
             }
         }
+        return null;
+    }
 
-        // School
-        if (updatedStudent.getSchool() == null || updatedStudent.getSchool().trim().isEmpty()
-                || updatedStudent.getSchool().length() >= 200) {
-            throw new IllegalArgumentException("Invalid school name (not empty & fewer than 200 characters)");
-        }
+    public static String Input(Scanner sc, String type) {
+        String input;
+        while (true) {
+            System.out.println("Input " + type + ":");
+            input = sc.nextLine();
 
-        // Start year
-        if (updatedStudent.getStartYear() < 1900 || String.valueOf(updatedStudent.getStartYear()).length() != 4) {
-            throw new IllegalArgumentException("Invalid start year(>= 1900, 4 numbers)");
+            if (Validator.validate(input, type)) {
+                return input;
+            } else {
+                System.out.println("Invalid data, please input again");
+            }
         }
-        // GPA
-        if (updatedStudent.getGpa() < 0.0 || updatedStudent.getGpa() > 10.0) {
-            throw new IllegalArgumentException("GPA must be within range 0-10.0");
+    }
+
+    public static void updateStudentMenu(DynamicStudentManager manager) {
+        Scanner scanner = new Scanner(System.in);
+        String existingId = scanner.nextLine();
+        Student existingStudent = manager.findById(existingId);
+        if (existingStudent == null) {
+            return;
+        }
+        System.out.println("Student before update \n" + existingStudent.toString());
+        while (true) {
+            System.out.println("\n===== UPDATE STUDENT MENU =====");
+            System.out.println("1. Name");
+            System.out.println("2. DateOfBirth - dd/MM/yyyy");
+            System.out.println("3. Address");
+            System.out.println("4. Height");
+            System.out.println("5. Weight");
+            System.out.println("6. StudentCode");
+            System.out.println("7. School");
+            System.out.println("8. StartYear");
+            System.out.println("9. GPA");
+            System.out.println("0. Exit update");
+            System.out.print("Pick an update option: ");
+
+            String choice = scanner.nextLine();
+
+            if (choice.equals("0")) {
+                System.out.println("Exit update!");
+                break;
+            }
+
+            String field = null;
+            switch (choice) {
+                case "1":
+                    field = "name";
+                    break;
+                case "2":
+                    field = "dateofbirth";
+                    break;
+                case "3":
+                    field = "address";
+                    break;
+                case "4":
+                    field = "height";
+                    break;
+                case "5":
+                    field = "weight";
+                    break;
+                case "6":
+                    field = "studentcode";
+                    break;
+                case "7":
+                    field = "school";
+                    break;
+                case "8":
+                    field = "startyear";
+                    break;
+                case "9":
+                    field = "gpa";
+                    break;
+                default:
+                    System.out.println("Invalid input! Enter your choice again:");
+                    continue;
+            }
+
+            String newValue = Validator.Input(scanner, field);
+
+            boolean updated = Validator.updateStudent(existingStudent, field, newValue);
+
+            if (updated) {
+                System.out.println("Successful update " + field + "!");
+                System.out.println("Student after update \n" + existingStudent.toString());
+                manager.updateStudent(existingId, existingStudent);
+            } else {
+                System.out.println("Failed update " + field + "!");
+            }
         }
     }
 

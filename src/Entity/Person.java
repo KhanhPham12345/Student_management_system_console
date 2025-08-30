@@ -22,12 +22,6 @@ public class Person implements Serializable {
         this.weightkg = weightkg;
     }
 
-    public Person(String name, LocalDate dob) {
-        this.id = counter++;
-        this.name = name;
-        this.dob = dob;
-    }
-
     public int getId() {
         return id;
     }

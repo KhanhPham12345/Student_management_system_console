@@ -17,7 +17,7 @@ public class Student extends Person {
         this.school = school;
         this.startYear = startYear;
         this.gpa = gpa;
-        this.Learningstrength = tinhLearningstrength(gpa);
+        this.Learningstrength = studentLearningstrength(gpa);
     }
 
     public String getStudentCode() {
@@ -50,25 +50,25 @@ public class Student extends Person {
 
     public void setGpa(double gpa) {
         this.gpa = gpa;
-        this.Learningstrength = tinhLearningstrength(gpa);
+        this.Learningstrength = studentLearningstrength(gpa);
     }
 
     public LearningStrength getLearningstrength() {
         return Learningstrength;
     }
 
-    private LearningStrength tinhLearningstrength(double gpa) {
+    private LearningStrength studentLearningstrength(double gpa) {
         if (gpa < 3)
-            return LearningStrength.KEM;
+            return LearningStrength.POOR;
         if (gpa < 5)
-            return LearningStrength.YEU;
+            return LearningStrength.WEAK;
         if (gpa < 6.5)
-            return LearningStrength.TRUNG_BINH;
+            return LearningStrength.AVERAGE;
         if (gpa < 7.5)
-            return LearningStrength.KHA;
+            return LearningStrength.GOOD;
         if (gpa < 9)
-            return LearningStrength.GIOI;
-        return LearningStrength.XUAT_SAC;
+            return LearningStrength.EXCELLENT;
+        return LearningStrength.EXCEPTIONAL;
     }
 
     @Override
@@ -79,7 +79,7 @@ public class Student extends Person {
                 ", studentCode='" + studentCode + '\'' +
                 ", startYear=" + startYear +
                 ", gpa=" + gpa +
-                ", Learningstrength=" + Learningstrength +
+                ", Learningstrength=" + Learningstrength.getPerformance() +
                 '}';
     }
 
