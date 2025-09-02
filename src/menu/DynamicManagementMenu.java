@@ -75,6 +75,12 @@ public class DynamicManagementMenu {
                 int modStartyear = Integer.parseInt(startYear);
                 double modGpa = Double.parseDouble(gpa);
 
+                // Check studentcode existing or not
+                if (!Validator.validateDuplicateStudentCode(studentCode, manager.getAllStudents())) {
+                    System.out.println("Found duplicate student code. Unable to process");
+                    break;
+                }
+
                 Student student = new Student(name, modDob, address, modHeight, modWeight, studentCode, school,
                         modStartyear, modGpa);
                 // Saving the student to the file
@@ -96,6 +102,7 @@ public class DynamicManagementMenu {
                 Validator.updateStudentMenu(manager);
                 break;
             case "4":
+                System.out.println("Input id:");
                 String studentId = scanner.nextLine();
                 manager.deleteStudentById(studentId);
                 break;

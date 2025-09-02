@@ -97,16 +97,6 @@ public class DynamicStudentManager {
         }
     }
 
-    // DELETE student with student code
-    public void deleteStudent(String studentCode) {
-        for (int i = 0; i < students.size(); i++) {
-            if (students.get(i).getStudentCode().equals(studentCode)) {
-                students.remove(i);
-                saveToFile();
-            }
-        }
-    }
-
     // DELETE student
     public void deleteStudentById(String idOrCode) {
         // check if the string inputted is an "id" or "student code"

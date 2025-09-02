@@ -2,6 +2,7 @@ package Actions;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Scanner;
 
 import Entity.LearningStrength;
@@ -64,11 +65,23 @@ public class Validator {
     }
 
     public static boolean validatWeight(Float weight) {
-        return weight != null && weight >= MIN_HEIGHT && weight <= MAX_HEIGHT;
+        return weight != null && weight >= MIN_WEIGHT && weight <= MAX_WEIGHT;
     }
 
     public static boolean validateStudentCode(String studentCode) {
         return studentCode != null && !studentCode.trim().isBlank() && studentCode.length() == STUDENT_CODE;
+    }
+
+    public static boolean validateDuplicateStudentCode(String studentCode, List<Student> students) {
+        if (studentCode == null || students == null) {
+            return false;
+        }
+        for (Student s : students) {
+            if (studentCode.equals(s.getStudentCode())) {
+                return false; // Duplicate found
+            }
+        }
+        return true; // No duplicate
     }
 
     public static boolean validateSchool(String school) {
@@ -167,6 +180,7 @@ public class Validator {
                     break;
 
                 case "studentcode":
+                    // I want to check if the newValue is duplicated or not
                     updateStudent.setStudentCode(newValue);
                     break;
 
@@ -279,6 +293,12 @@ public class Validator {
             }
 
             String newValue = Validator.Input(scanner, field);
+            if ("studentcode".equals(field)) {
+                if (!validateDuplicateStudentCode(existingId, manager.getAllStudents())) {
+                    System.out.println("Duplicate student code. Can't update");
+                    break;
+                }
+            }
 
             boolean updated = Validator.updateStudent(existingStudent, field, newValue);
 
